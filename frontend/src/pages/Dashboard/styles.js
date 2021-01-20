@@ -12,6 +12,4 @@ export const Container = styled.div`
   min-height: 100vh;
   background-color: #F0F2F5;
   padding:20px;
-`;
-
-
+`; 

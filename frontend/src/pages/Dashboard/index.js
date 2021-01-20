@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // components
 import { Table, Button, Popup, Modal, Header, Icon, Form } from 'semantic-ui-react'
@@ -8,6 +9,7 @@ import api from '../../services/api';
 
 // styles
 import { Container, InitialText } from './styles';
+
 
 const Dashboard = () => {
   const [alunos, setAlunos] = useState([]);
@@ -103,7 +105,7 @@ const Dashboard = () => {
         </Table.Body>
       </Table>
       {render_modal_info_alunos()}
-      <Button primary>Adicionar aluno</Button>
+      <Button as={Link} className="ButtonLink" to="../cadastro">Adicionar aluno</Button>
       <Button href="/" secondary>Ver instruções</Button>
     </Container>
   );
