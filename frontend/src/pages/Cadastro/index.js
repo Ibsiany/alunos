@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import { Link } from 'react-router-dom';
 import {Form, Button, Popup, Icon, FormField} from 'semantic-ui-react';
 import api from '../../services/api';
-import { Div } from './styles';
+import { Div, InitialText } from './styles';
 
 const valoresIniciais = {
   nome: "",
@@ -13,6 +13,7 @@ const valoresIniciais = {
 };
 
 export default function App() {
+  
   const [values, setValues] = useState(valoresIniciais); 
 
   function handlerValues(event) {
@@ -40,6 +41,7 @@ export default function App() {
 
   return (
     <Div>
+             <InitialText>Cadastrar aluno</InitialText>      
        <Form>
             <Form.Group widths='equal'>
                 <Form.Input fluid label='Nome' placeholder='Nome'  name="nome" value={values.nome} onChange={handlerValues}/>

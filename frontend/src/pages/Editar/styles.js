@@ -7,3 +7,9 @@ export const Div = styled.div`
   background-color: #F0F2F5;
   padding:20px;
 `; 
+export const InitialText = styled.h2`
+  font-size: 20px;
+  text-align: center;
+
+  color: #000;
+`;
