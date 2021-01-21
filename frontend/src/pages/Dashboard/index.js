@@ -79,7 +79,7 @@ const Dashboard = () => {
 
   function render_alunos(){
     return alunos.map((v)=><Table.Row>
-      <Table.Cell>{v.id}</Table.Cell>
+      {/* <Table.Cell>{v.id}</Table.Cell> */}
       <Table.Cell>{v.nome}</Table.Cell>
       <Table.Cell>{v.email}</Table.Cell>
       <Table.Cell>{v.cep}</Table.Cell>
@@ -93,7 +93,7 @@ const Dashboard = () => {
       <Table celled>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>ID Aluno</Table.HeaderCell>
+            {/* <Table.HeaderCell>ID Aluno</Table.HeaderCell> */}
             <Table.HeaderCell>Nome</Table.HeaderCell>
             <Table.HeaderCell>Email</Table.HeaderCell>
             <Table.HeaderCell>CEP</Table.HeaderCell>
