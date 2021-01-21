@@ -4,6 +4,7 @@ import { Router } from 'express';
 import AlunosController from '../app/controllers/AlunoController';
 import CursosController from '../app/controllers/CursoController';
 import Aluno from '../app/models/Aluno';
+import Curso from '../app/models/Curso';
 /**  * */
 
 const routes = new Router();

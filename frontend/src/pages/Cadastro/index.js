@@ -1,27 +1,62 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import { Link } from 'react-router-dom';
-import {Form, Table, Button, Popup, Modal, Header, Icon, Container, FormField} from 'semantic-ui-react';
+import {Form, Button, Popup, Modal, Header, Icon, FormField} from 'semantic-ui-react';
 import api from '../../services/api';
 import { Div } from './styles';
 
-function cadastro (){   
+const valoresIniciais = {
+  nome: "",
+  email: "",
+  cep: ""
+};
+
+export default function App() {
+  const [values, setValues] = useState(valoresIniciais); 
+
+  function handlerValues(event) {
+    let campo = event.target.getAttribute("name");
+    let valor = event.target.value;
+    setValues({ ...values, [campo]: valor });
+  }
+  function retornaDados() {
+    async function dados() {
+      try {
+        const response = await api.post("/cadastro", {
+          nome: values.nome,
+          email: values.email,
+          cep: values.cep,
+          cidade: values.cidade,
+          estado: values.estado
+        });
+      } catch {
+        alert("Confira a api");
+      }
+    }
+
+    dados();
+  }
+
   return (
-      <Div>
-        <Form> 
+    <Div>
+       <Form>
             <Form.Group widths='equal'>
-                <Form.Input fluid label='Nome' placeholder='Nome'/>
-                <Form.Input fluid label='Email' placeholder='Email'/>
-                <Form.Input fluid label='CEP' placeholder='Ex.: 00000-000' type="number"/>
+                <Form.Input fluid label='Nome' placeholder='Nome'  name="nome" value={values.nome} onChange={handlerValues}/>
+                <Form.Input fluid label='Email' placeholder='Email' name="email" value={values.email} onChange={handlerValues}/>
+                <Form.Input fluid label='CEP' placeholder='Ex.: 00000-000' name="cep" type="number"  value={values.cep} onChange={handlerValues}/>
+                <Form.Input fluid label='Cidade' placeholder='Cidade' name="cidade"  value={values.cidade} onChange={handlerValues}/>
+                <Form.Input fluid label='Estado' placeholder='Ex.: MG' name="estado"  value={values.estado} onChange={handlerValues}/>
             </Form.Group>
+            <Button as={Link} color='red' className="ButtonLink" to="../admin">
+              <Icon name='remove' />Cancelar
+            </Button>
+            <Button color='green'>
+              <Icon name='checkmark' /> Salvar
+            </Button>
         </Form>
-        <Button as={Link} color='red' className="ButtonLink" to="../admin">
-        <Icon name='remove' />Cancelar
-        </Button>
-        <Button color='green'>
-            <Icon name='checkmark' /> Salvar
-        </Button>
+        {/* <h1>Seus Dados</h1>
+        <p>Nome: {retornaDados}</p>
+        <p>Email: {values.email}</p>
+        <p>CEP: {values.cep}</p> */}
       </Div>
   );
 }
-
-export default cadastro;
