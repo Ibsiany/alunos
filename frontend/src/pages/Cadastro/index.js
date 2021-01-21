@@ -53,7 +53,12 @@ export default function App() {
             <Button as={Link} color='red' className="ButtonLink" to="../admin">
               <Icon name='remove' />Cancelar
             </Button>
-            <Button as={Link} color='green' className="ButtonLink" onClick={() => api.post(retornaDados())} to="../">
+            <Button color='green' onClick={() => {
+              api.post(retornaDados());
+              window.location.reload();
+              alert("Cadastrado com sucesso")
+            }
+              }>
               <Icon name='checkmark' /> Salvar
             </Button>
         </Form>

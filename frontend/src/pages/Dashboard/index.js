@@ -106,7 +106,11 @@ const Dashboard = () => {
         basic
       />
       <Popup
-        trigger={<Button icon='close' negative />}
+        // trigger={<Button as={Link} icon='close' className="ButtonLink" negative onClick={()=> api.delete(`/excluir/${data_aluno.id}`)} to="../"/>}
+        trigger={<Button icon='close' negative onClick={()=> {
+          api.delete(`/excluir/${data_aluno.id}`)
+          window.location.reload();
+        }}/>}
         content="Excluir aluno" 
         basic
       />
