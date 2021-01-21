@@ -9,13 +9,43 @@ import api from '../../services/api';
 
 // styles
 import { Container, InitialText } from './styles';
+const valoresIniciais = {
+  nome: "",
+  email: "",
+  cep: "",
+  cidade:"",
+  estado:""
+};
 
 
 const Dashboard = () => {
   const [alunos, setAlunos] = useState([]);
   const [currentInfo, setCurrentInfo] = useState([]);
   const [modalInfos, setModalInfos] = useState(false);
-  
+  const [values, setValues] = useState(valoresIniciais)
+
+  function handlerChange(event) {
+    let campo = event.target.getAttribute("name");
+    let valor = event.target.value;
+    setValues({ ...values, [campo]: valor });
+  }
+  function retornaDados(id) {
+    async function dados() {
+      try {
+        const response = await api.put(`/editar/${id}`, {
+          nome: values.nome,
+          email: values.email,
+          cep: values.cep,
+          cidade: values.cidade,
+          estado: values.estado
+        });
+      } catch {
+        alert("Confira a api");
+      }
+    }
+
+    dados();
+  }
 
   useEffect(()=>{
     async function fetchData() {
@@ -28,16 +58,17 @@ const Dashboard = () => {
     }
     fetchData();
   }, [])
-
   const render_modal_info_alunos = () => (
     <Modal open={modalInfos} onClose={()=>setModalInfos(false)} closeIcon>
     <Header content={`Editando informações de ${currentInfo.nome}`} />
     <Modal.Content>
       <Form>
         <Form.Group widths='equal'>
-          <Form.Input fluid label='Nome' placeholder='Nome' />
-          <Form.Input fluid label='Email' placeholder='Email' />
-          <Form.Input fluid label='CEP' placeholder='CEP' />
+          <Form.Input fluid label='Nome' placeholder='Nome' name="nome" value={currentInfo.nome} values={values.nome} onChange={handlerChange}/>
+          <Form.Input fluid label='Email' placeholder='Email' name="email" value={currentInfo.email} values={values.email} onChange={handlerChange}/>
+          <Form.Input fluid label='CEP' placeholder='Ex.:00000-000' name="cep" type="number" value={currentInfo.cep} values={values.cep} onChange={handlerChange}/>
+          <Form.Input fluid label='Cidade' placeholder='Cidade' name="cidade" value={currentInfo.cidade} values={values.cidade} onChange={handlerChange}/>
+          <Form.Input fluid label='Estado' placeholder='Ex.:MG' name="estado" value={currentInfo.estado} values={values.estado} onChange={handlerChange}/>
         </Form.Group>
       </Form>
     </Modal.Content>
@@ -45,7 +76,7 @@ const Dashboard = () => {
       <Button onClick={()=>setModalInfos(false)} color='red'>
         <Icon name='remove' /> Cancelar
       </Button>
-      <Button color='green'>
+      <Button as={Link} color='green' className="ButtonLink" onClick={() => api.put(retornaDados(currentInfo.id))} to="../">
         <Icon name='checkmark' /> Salvar
       </Button>
     </Modal.Actions>
@@ -53,23 +84,22 @@ const Dashboard = () => {
   )
 
   function open_info_alunos(data_aluno){
-    console.log(data_aluno)
     setCurrentInfo(data_aluno)
     setModalInfos(true)
   }
 
   function render_actions(data_aluno){
     return <center>
-      {/* <Popup
+      <Popup
         trigger={<Button icon='edit' onClick={()=>open_info_alunos(data_aluno)} />}
         content="Editar informações"
         basic
-      /> */}
-      <Popup
+      />
+      {/* <Popup
         trigger={<Button as={Link} icon='edit'className="ButtonLink" to="../editar/:id"/>}
         content="Editar informações"
         basic
-      />
+      /> */}
       <Popup
         trigger={<Button icon='plus' positive />}
         content="Adicionar curso para aluno"
@@ -77,7 +107,7 @@ const Dashboard = () => {
       />
       <Popup
         trigger={<Button icon='close' negative />}
-        content="Excluir aluno"
+        content="Excluir aluno" 
         basic
       />
     </center>
