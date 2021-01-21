@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [alunos, setAlunos] = useState([]);
   const [currentInfo, setCurrentInfo] = useState([]);
   const [modalInfos, setModalInfos] = useState(false);
+  
 
   useEffect(()=>{
     async function fetchData() {
@@ -59,8 +60,13 @@ const Dashboard = () => {
 
   function render_actions(data_aluno){
     return <center>
-      <Popup
+      {/* <Popup
         trigger={<Button icon='edit' onClick={()=>open_info_alunos(data_aluno)} />}
+        content="Editar informações"
+        basic
+      /> */}
+      <Popup
+        trigger={<Button as={Link} icon='edit'className="ButtonLink" to="../editar/:id"/>}
         content="Editar informações"
         basic
       />

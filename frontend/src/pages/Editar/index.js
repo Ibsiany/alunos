@@ -23,7 +23,7 @@ export default function App() {
   function retornaDados() {
     async function dados() {
       try {
-        const response = await api.post("/cadastro", {
+        const response = await api.put("/editar/:id", {
           nome: values.nome,
           email: values.email,
           cep: values.cep,
@@ -51,7 +51,7 @@ export default function App() {
             <Button as={Link} color='red' className="ButtonLink" to="../admin">
               <Icon name='remove' />Cancelar
             </Button>
-            <Button as={Link} color='green' className="ButtonLink" onClick={() => api.post(retornaDados())} to="../">
+            <Button as={Link} color='green' className="ButtonLink" onClick={() => api.put(retornaDados())} to="../">
               <Icon name='checkmark' /> Salvar
             </Button>
         </Form>
