@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 // components
 import { Table, Button, Popup, Modal, Header, Icon, Form } from 'semantic-ui-react'
+import ViaCep from 'react-via-cep'
 
 //services
 import api from '../../services/api';
@@ -22,13 +24,35 @@ const Dashboard = () => {
   const [alunos, setAlunos] = useState([]);
   const [currentInfo, setCurrentInfo] = useState([]);
   const [modalInfos, setModalInfos] = useState(false);
-  const [values, setValues] = useState(valoresIniciais)
+  const [values, setValues] = useState(valoresIniciais);
+  const [cidade, setCidade] = useState([]);
+  const [estado, setEstado] = useState([]);
 
   function handlerChange(event) {
     let campo = event.target.getAttribute("name");
     let valor = event.target.value;
     setValues({ ...values, [campo]: valor });
-  }
+      // if ( campo == "cep" ) { 
+      //   setValues({...values, cidade: cidade})
+      // } else {
+      //   setValues({ ...values, [campo]: valor });
+      // }
+ }
+
+ function buscaLocal() {
+  if (values.cep.length < 8) {
+    return;}
+  axios.get(`https://viacep.com.br/ws/${values.cep}/json/`)
+  .then(function (response) {
+    setCidade(response.data.localidade);
+    setEstado(response.data.uf);
+    setValues({ ...values, cidade: response.data.localidade, estado: response.data.uf});
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
+}
+
   function retornaDados(id) {
     async function dados() {
       try {
@@ -60,23 +84,28 @@ const Dashboard = () => {
   }, [])
   const render_modal_info_alunos = () => (
     <Modal open={modalInfos} onClose={()=>setModalInfos(false)} closeIcon>
-    <Header content={`Editando informações de ${currentInfo.nome}`} />
+    <Header content={`Editando informações de ${currentInfo.nome} (Favor preencher todos os campos)`} />
     <Modal.Content>
       <Form>
         <Form.Group widths='equal'>
-          <Form.Input fluid label='Nome' placeholder='Nome' name="nome" value={currentInfo.nome} values={values.nome} onChange={handlerChange}/>
-          <Form.Input fluid label='Email' placeholder='Email' name="email" value={currentInfo.email} values={values.email} onChange={handlerChange}/>
-          <Form.Input fluid label='CEP' placeholder='Ex.:00000-000' name="cep" type="number" value={currentInfo.cep} values={values.cep} onChange={handlerChange}/>
-          <Form.Input fluid label='Cidade' placeholder='Cidade' name="cidade" value={currentInfo.cidade} values={values.cidade} onChange={handlerChange}/>
-          <Form.Input fluid label='Estado' placeholder='Ex.:MG' name="estado" value={currentInfo.estado} values={values.estado} onChange={handlerChange}/>
-        </Form.Group>
+          <Form.Input fluid label='Nome' placeholder='Nome' name="nome" values={values.nome} onChange={handlerChange}/>
+          <Form.Input fluid label='Email' placeholder='Email' name="email" values={values.email} onChange={handlerChange}/>
+          <Form.Input fluid label='CEP' placeholder='Ex.:00000000' name="cep" type="number" values={values.cep} onChange={handlerChange}/>
+          {buscaLocal()}
+          <Form.Input fluid label='Cidade' placeholder='Cidade' name="cidade" value={cidade} values={values.cidade} onChange={handlerChange}/>
+          <Form.Input fluid label='Estado' placeholder='Ex.:MG' name="estado" value={estado} values={values.estado} onChange={handlerChange}/>
+        </Form.Group> 
       </Form>
     </Modal.Content>
     <Modal.Actions>
       <Button onClick={()=>setModalInfos(false)} color='red'>
         <Icon name='remove' /> Cancelar
       </Button>
-      <Button as={Link} color='green' className="ButtonLink" onClick={() => api.put(retornaDados(currentInfo.id))} to="../">
+      <Button color='green' onClick={() => {
+        api.put(retornaDados(currentInfo.id))
+        window.location.reload();
+        }
+      } >
         <Icon name='checkmark' /> Salvar
       </Button>
     </Modal.Actions>
@@ -101,7 +130,7 @@ const Dashboard = () => {
         basic
       /> */}
       <Popup
-        trigger={<Button icon='plus' positive />}
+        trigger={<Button icon='plus' positive onClick={() => alert("Campo não configurado. Confira a api.")}/>}
         content="Adicionar curso para aluno"
         basic
       />
@@ -124,8 +153,24 @@ const Dashboard = () => {
       <Table.Cell>{v.email}</Table.Cell>
       <Table.Cell>{v.cep}</Table.Cell>
       <Table.Cell>{render_actions(v)}</Table.Cell>
-    </Table.Row>)
+    </Table.Row>
+    )
   }
+
+  // function testeVetor() {
+  //   var meusElementos = [{name: 'Engenharia de Software'},{name: 'bih'}, {name: 'teh'}];
+  //   return (
+  //     <select>
+  //       {
+  //         meusElementos.map((elemento) =>(
+  //           <option value={`${elemento.name}`}>
+  //             {elemento.name}
+  //           </option>
+  //         ))
+  //       }
+  //     </select>
+  //   );
+  // }
 
   return (
     <Container>

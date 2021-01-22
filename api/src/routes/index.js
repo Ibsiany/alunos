@@ -6,6 +6,7 @@ import CursosController from '../app/controllers/CursoController';
 import Aluno from '../app/models/Aluno';
 import Curso from '../app/models/Curso';
 /**  * */
+// const CursosController = require("../app/controllers/CursoController");
 
 const routes = new Router();
 
@@ -16,6 +17,5 @@ routes.put('/editar/:id', AlunosController.update);
 routes.delete('/excluir/:id', AlunosController.delete);
 routes.get('/cursos', CursosController.index);
 routes.get('/cursos/:id', CursosController.read);
-
 
 export default routes;
